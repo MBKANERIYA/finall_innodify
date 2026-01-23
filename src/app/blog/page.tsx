@@ -1,8 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, Clock, User } from "lucide-react";
+import { ArrowRight, Calendar, Clock, Plus, User } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { BlogPost, defaultBlogs } from "@/data/blogs";
 
 // Hero
 function BlogHero() {
@@ -30,77 +32,32 @@ function BlogHero() {
 
 // Blog Posts
 function BlogPostsSection() {
-    const posts = [
-        {
-            title: "Build eCommerce Website From Scratch in 9 Easy Steps",
-            excerpt: "A comprehensive guide to launching your first online store, from planning to deployment.",
-            author: "Team Innodify",
-            date: "Dec 20, 2024",
-            readTime: "8 min read",
-            category: "Development",
-            image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80",
-        },
-        {
-            title: "eCommerce UX Audit Checklist: Finding and Fixing UX Issues",
-            excerpt: "Learn how to identify and resolve user experience problems that hurt your conversion rate.",
-            author: "Team Innodify",
-            date: "Dec 15, 2024",
-            readTime: "6 min read",
-            category: "UX Design",
-            image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=600&q=80",
-        },
-        {
-            title: "Shopify vs Magento: Which Platform Is Right for Your Business?",
-            excerpt: "An in-depth comparison of the two leading eCommerce platforms to help you make the right choice.",
-            author: "Team Innodify",
-            date: "Dec 10, 2024",
-            readTime: "10 min read",
-            category: "Platforms",
-            image: "https://images.unsplash.com/photo-1556742111-a301076d9d18?w=600&q=80",
-        },
-        {
-            title: "The Complete Guide to Headless Commerce",
-            excerpt: "Everything you need to know about modern headless architecture and composable commerce.",
-            author: "Team Innodify",
-            date: "Dec 5, 2024",
-            readTime: "12 min read",
-            category: "Technology",
-            image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80",
-        },
-        {
-            title: "How to Improve Your Magento Store's Core Web Vitals",
-            excerpt: "Practical tips to boost your Magento performance and improve your Google rankings.",
-            author: "Team Innodify",
-            date: "Nov 28, 2024",
-            readTime: "7 min read",
-            category: "Performance",
-            image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80",
-        },
-        {
-            title: "Hyvä Theme: A Game Changer for Magento Performance",
-            excerpt: "Discover how Hyvä themes can dramatically improve your Magento 2 store's speed.",
-            author: "Team Innodify",
-            date: "Nov 20, 2024",
-            readTime: "5 min read",
-            category: "Magento",
-            image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80",
-        },
-    ];
+    const [posts, setPosts] = useState<BlogPost[]>(defaultBlogs);
+
+
+
+
+
+
 
     return (
-        <section className="py-24 bg-white">
+        <section className="py-24 bg-white relative">
             <div className="container mx-auto px-6">
+
+
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {posts.map((post, index) => (
                         <motion.article
-                            key={post.title}
+                            key={index}
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
-                            className="group cursor-pointer"
+                            className="group relative cursor-pointer"
                         >
-                            <div className="aspect-video rounded-xl overflow-hidden mb-4">
+
+
+                            <div className="aspect-video rounded-xl overflow-hidden mb-4 bg-gray-100">
                                 <div
                                     className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
                                     style={{ backgroundImage: `url(${post.image})` }}
