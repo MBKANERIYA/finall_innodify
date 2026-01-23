@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowLeft, Save, Upload, Trash2, Search } from "lucide-react";
+import { ArrowLeft, Save, Upload, Trash2, Search, Bold, List, Type, Heading3, Heading4 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -39,6 +39,31 @@ export default function AddBlogPage() {
         setFormData(post);
         setEditingSlug(post.slug);
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const insertFormatting = (prefix: string, suffix: string = "") => {
+        const textarea = document.querySelector('textarea[name="content"]') as HTMLTextAreaElement;
+        if (!textarea) return;
+
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const text = textarea.value;
+        const before = text.substring(0, start);
+        const after = text.substring(end, text.length);
+        const selected = text.substring(start, end);
+
+        const newText = before + prefix + selected + suffix + after;
+
+        setFormData(prev => ({ ...prev, content: newText }));
+
+        // Focus back and set cursor
+        setTimeout(() => {
+            textarea.focus();
+            textarea.setSelectionRange(
+                start + prefix.length,
+                start + prefix.length + selected.length
+            );
+        }, 0);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -225,21 +250,62 @@ export default function AddBlogPage() {
 
                         {/* Content */}
                         <div>
-                            <label className="block text-sm font-medium text-[#b6bcc6] mb-2">
-                                Full Content
-                            </label>
+                            <div className="flex items-center justify-between mb-2">
+                                <label className="block text-sm font-medium text-[#b6bcc6]">
+                                    Full Content
+                                </label>
+                                <div className="flex items-center gap-1 bg-[#15181c] p-1 rounded-md border border-[#2a2f36]">
+                                    <button
+                                        type="button"
+                                        onClick={() => insertFormatting("### ")}
+                                        className="p-1.5 hover:bg-[#2a2f36] rounded text-[#9ca3af] hover:text-[#00adef] transition-all"
+                                        title="Heading 1"
+                                    >
+                                        <Heading3 size={16} />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => insertFormatting("#### ")}
+                                        className="p-1.5 hover:bg-[#2a2f36] rounded text-[#9ca3af] hover:text-[#00adef] transition-all"
+                                        title="Heading 2"
+                                    >
+                                        <Heading4 size={16} />
+                                    </button>
+                                    <div className="w-px h-4 bg-[#2a2f36] mx-1" />
+                                    <button
+                                        type="button"
+                                        onClick={() => insertFormatting("**", "**")}
+                                        className="p-1.5 hover:bg-[#2a2f36] rounded text-[#9ca3af] hover:text-[#00adef] transition-all"
+                                        title="Bold"
+                                    >
+                                        <Bold size={16} />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => insertFormatting("- ")}
+                                        className="p-1.5 hover:bg-[#2a2f36] rounded text-[#9ca3af] hover:text-[#00adef] transition-all"
+                                        title="Bullet List"
+                                    >
+                                        <List size={16} />
+                                    </button>
+                                </div>
+                            </div>
                             <textarea
                                 name="content"
                                 value={formData.content || ""}
-                                rows={8}
+                                rows={12}
                                 placeholder="Write the full blog post content here..."
                                 onChange={handleChange}
                                 required
                                 className="w-full px-4 py-3 rounded-lg bg-[#15181c] text-[#e5e7eb]
                 placeholder:text-[#6b7280] border border-[#2a2f36]
                 focus:border-[#00adef] focus:ring-2 focus:ring-[#00adef]/30
-                outline-none transition-all"
+                outline-none transition-all font-mono text-sm shadow-inner"
                             />
+                            <p className="text-[10px] text-[#4b5563] mt-2 flex items-center gap-1">
+                                <Type size={10} />
+                                Markdown formatting supported: ### Header, **Bold**, - Bullet
+                            </p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

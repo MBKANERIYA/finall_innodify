@@ -98,8 +98,49 @@ export default function BlogPostPage() {
 
                     {/* Content */}
                     <div className="prose prose-invert prose-lg max-w-none">
-                        <div className="text-[#d1d5db] leading-relaxed whitespace-pre-wrap font-sans">
-                            {post.content}
+                        <div className="text-[#d1d5db] leading-relaxed font-sans space-y-4">
+                            {post.content.split('\n').map((line, i) => {
+                                if (line.startsWith('### ')) {
+                                    return <h3 key={i} className="text-2xl font-serif text-white mt-8 mb-4">{line.replace('### ', '')}</h3>;
+                                }
+                                if (line.startsWith('#### ')) {
+                                    return <h4 key={i} className="text-xl font-serif text-white mt-6 mb-3">{line.replace('#### ', '')}</h4>;
+                                }
+                                if (line.startsWith('- ')) {
+                                    const content = line.replace('- ', '');
+                                    // Basic bold handling within list items
+                                    const parts = content.split(/(\*\*.*?\*\*)/g);
+                                    return (
+                                        <div key={i} className="flex gap-3 ml-4">
+                                            <span className="text-[#00adef]">•</span>
+                                            <p>
+                                                {parts.map((part, pi) => {
+                                                    if (part.startsWith('**') && part.endsWith('**')) {
+                                                        return <strong key={pi} className="text-white font-semibold">{part.slice(2, -2)}</strong>;
+                                                    }
+                                                    return part;
+                                                })}
+                                            </p>
+                                        </div>
+                                    );
+                                }
+                                if (line.trim() === '') {
+                                    return <div key={i} className="h-2" />;
+                                }
+
+                                // Basic bold handling for regular paragraphs
+                                const parts = line.split(/(\*\*.*?\*\*)/g);
+                                return (
+                                    <p key={i}>
+                                        {parts.map((part, pi) => {
+                                            if (part.startsWith('**') && part.endsWith('**')) {
+                                                return <strong key={pi} className="text-white font-semibold">{part.slice(2, -2)}</strong>;
+                                            }
+                                            return part;
+                                        })}
+                                    </p>
+                                );
+                            })}
                         </div>
                     </div>
 
