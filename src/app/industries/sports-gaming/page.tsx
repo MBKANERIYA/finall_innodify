@@ -163,10 +163,31 @@ function MiniPongGame() {
                 g.ballDX = -1.5; g.ballDY = -1.2;
             }
 
-            // AI movement
-            const aiCenter = g.aiPaddleY + 25;
-            if (aiCenter < g.ballY - 10) g.aiPaddleY += 1.4;
-            else if (aiCenter > g.ballY + 10) g.aiPaddleY -= 1.4;
+            // AI movement — predict where ball will arrive
+            const aiSpeed = 1.6;
+            if (g.ballDX > 0) {
+                // Ball coming toward AI — predict landing Y
+                const stepsToReach = (W - 18 - g.ballX) / g.ballDX;
+                let predictedY = g.ballY + g.ballDY * stepsToReach;
+                // Simulate bounces
+                while (predictedY < 0 || predictedY > H) {
+                    if (predictedY < 0) predictedY = -predictedY;
+                    if (predictedY > H) predictedY = 2 * H - predictedY;
+                }
+                const aiTarget = predictedY - 25;
+                const diff = aiTarget - g.aiPaddleY;
+                if (Math.abs(diff) > 2) {
+                    g.aiPaddleY += Math.sign(diff) * Math.min(aiSpeed, Math.abs(diff));
+                }
+            } else {
+                // Ball moving away — drift toward center
+                const center = H / 2 - 25;
+                const diff = center - g.aiPaddleY;
+                if (Math.abs(diff) > 3) {
+                    g.aiPaddleY += Math.sign(diff) * 0.6;
+                }
+            }
+            g.aiPaddleY = Math.max(0, Math.min(H - 50, g.aiPaddleY));
 
             // Draw paddles
             ctx.fillStyle = "#7c3aed";
