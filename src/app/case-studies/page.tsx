@@ -108,17 +108,6 @@ function CaseStudiesGrid() {
             image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80",
             link: "/case-studies/unisphere-app"
         },
-        {
-            title: "Cloud-Based Transformation of Real Estate Operations",
-            client: "Mahalaxmi Group",
-            clientColor: "#00adef",
-            tags: ["Cloud CRM", "Web App"],
-            stat: "30%",
-            statLabel: "Productivity",
-            description: "How we helped Mahalaxmi Real Estate Group achieve 100% data security and boost productivity by 30% with a custom cloud-native CRM.",
-            image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80",
-            link: "/case-studies/mahalaxmi-real-estate"
-        },
     ];
 
     return (
