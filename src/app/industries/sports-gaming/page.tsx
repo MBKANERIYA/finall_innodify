@@ -68,13 +68,22 @@ const useCases = [
 
 function MiniPongGame() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [gameOver, setGameOver] = useState<null | "player" | "ai">(null);
     const gameRef = useRef({
-        ballX: 150, ballY: 100,
-        ballDX: 2.5, ballDY: 2,
-        paddleY: 75, aiPaddleY: 75,
+        ballX: 200, ballY: 110,
+        ballDX: 1.5, ballDY: 1.2,
+        paddleY: 85, aiPaddleY: 85,
         playerScore: 0, aiScore: 0,
-        running: true,
     });
+
+    const resetGame = useCallback(() => {
+        const g = gameRef.current;
+        g.ballX = 200; g.ballY = 110;
+        g.ballDX = 1.5; g.ballDY = 1.2;
+        g.paddleY = 85; g.aiPaddleY = 85;
+        g.playerScore = 0; g.aiScore = 0;
+        setGameOver(null);
+    }, []);
 
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
         const canvas = canvasRef.current;
@@ -104,6 +113,8 @@ function MiniPongGame() {
         const g = gameRef.current;
 
         const draw = () => {
+            if (gameOver) return;
+
             const W = canvas.width;
             const H = canvas.height;
 
@@ -121,7 +132,7 @@ function MiniPongGame() {
             ctx.stroke();
             ctx.setLineDash([]);
 
-            // Ball
+            // Ball movement
             g.ballX += g.ballDX;
             g.ballY += g.ballDY;
 
@@ -130,30 +141,32 @@ function MiniPongGame() {
             // Player paddle collision (left)
             if (g.ballX <= 18 && g.ballY >= g.paddleY && g.ballY <= g.paddleY + 50) {
                 g.ballDX = Math.abs(g.ballDX);
-                g.ballDY += (g.ballY - (g.paddleY + 25)) * 0.08;
+                g.ballDY += (g.ballY - (g.paddleY + 25)) * 0.06;
             }
             // AI paddle collision (right)
             if (g.ballX >= W - 18 && g.ballY >= g.aiPaddleY && g.ballY <= g.aiPaddleY + 50) {
                 g.ballDX = -Math.abs(g.ballDX);
-                g.ballDY += (g.ballY - (g.aiPaddleY + 25)) * 0.08;
+                g.ballDY += (g.ballY - (g.aiPaddleY + 25)) * 0.06;
             }
 
             // Scoring
             if (g.ballX < 0) {
                 g.aiScore++;
+                if (g.aiScore >= 11) { setGameOver("ai"); return; }
                 g.ballX = W / 2; g.ballY = H / 2;
-                g.ballDX = 2.5; g.ballDY = 2;
+                g.ballDX = 1.5; g.ballDY = 1.2;
             }
             if (g.ballX > W) {
                 g.playerScore++;
+                if (g.playerScore >= 11) { setGameOver("player"); return; }
                 g.ballX = W / 2; g.ballY = H / 2;
-                g.ballDX = -2.5; g.ballDY = -2;
+                g.ballDX = -1.5; g.ballDY = -1.2;
             }
 
             // AI movement
             const aiCenter = g.aiPaddleY + 25;
-            if (aiCenter < g.ballY - 8) g.aiPaddleY += 1.8;
-            else if (aiCenter > g.ballY + 8) g.aiPaddleY -= 1.8;
+            if (aiCenter < g.ballY - 10) g.aiPaddleY += 1.4;
+            else if (aiCenter > g.ballY + 10) g.aiPaddleY -= 1.4;
 
             // Draw paddles
             ctx.fillStyle = "#7c3aed";
@@ -176,15 +189,20 @@ function MiniPongGame() {
             ctx.fillStyle = "#c4b5fd";
             ctx.font = "bold 24px sans-serif";
             ctx.textAlign = "center";
-            ctx.fillText(String(g.playerScore), W / 2 - 25, 28);
-            ctx.fillText(String(g.aiScore), W / 2 + 25, 28);
+            ctx.fillText(String(g.playerScore), W / 2 - 30, 28);
+            ctx.fillText(String(g.aiScore), W / 2 + 30, 28);
+
+            // Max score label
+            ctx.fillStyle = "#ddd6fe";
+            ctx.font = "10px sans-serif";
+            ctx.fillText("First to 11", W / 2, H - 8);
 
             animId = requestAnimationFrame(draw);
         };
 
         draw();
         return () => cancelAnimationFrame(animId);
-    }, []);
+    }, [gameOver]);
 
     return (
         <motion.div
@@ -193,20 +211,41 @@ function MiniPongGame() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="relative"
         >
-            <canvas
-                ref={canvasRef}
-                width={300}
-                height={200}
-                onMouseMove={handleMouseMove}
-                onTouchMove={handleTouchMove}
-                className="rounded-2xl shadow-xl border-2 border-violet-200 cursor-none w-[300px] h-[200px] lg:w-[360px] lg:h-[240px]"
-            />
+            <div className="relative">
+                <canvas
+                    ref={canvasRef}
+                    width={400}
+                    height={220}
+                    onMouseMove={handleMouseMove}
+                    onTouchMove={handleTouchMove}
+                    className="rounded-2xl shadow-xl border-2 border-violet-200 cursor-none w-[400px] h-[220px] lg:w-[480px] lg:h-[264px]"
+                />
+
+                {/* Game Over Overlay */}
+                {gameOver && (
+                    <div className="absolute inset-0 bg-violet-900/80 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center gap-4">
+                        <span className="text-3xl font-bold text-white">
+                            {gameOver === "player" ? "You Win! 🎉" : "We Win! 🏆"}
+                        </span>
+                        <span className="text-violet-200 text-sm">
+                            {gameRef.current.playerScore} — {gameRef.current.aiScore}
+                        </span>
+                        <button
+                            onClick={resetGame}
+                            className="px-6 py-2 bg-violet-500 hover:bg-violet-400 text-white font-semibold rounded-full transition-colors text-sm"
+                        >
+                            Play Again
+                        </button>
+                    </div>
+                )}
+            </div>
             <div className="text-center mt-3">
                 <span className="text-xs text-violet-400 font-medium">Move mouse to play Pong</span>
             </div>
         </motion.div>
     );
 }
+
 
 function HeroSection() {
     return (
