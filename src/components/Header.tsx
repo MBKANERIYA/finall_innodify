@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Menu, X, Bot, Database, Cloud, Code, ShoppingCart, Smartphone, Heart, Landmark, ShoppingBag, GraduationCap, Building2, Truck } from "lucide-react";
+import { ChevronDown, Menu, X, Bot, Database, Cloud, Code, ShoppingCart, Smartphone, Heart, Landmark, ShoppingBag, GraduationCap, Building2, Truck, Gamepad2, Film } from "lucide-react";
 
 interface DropdownItem {
   label: string;
@@ -62,6 +62,8 @@ const navItems: NavItem[] = [
       { label: "Education", href: "/industries/education", icon: <GraduationCap className="w-5 h-5" /> },
       { label: "Real Estate", href: "/industries/real-estate", icon: <Building2 className="w-5 h-5" /> },
       { label: "Logistics", href: "/industries/logistics", icon: <Truck className="w-5 h-5" /> },
+      { label: "Sports & Gaming", href: "/industries/sports-gaming", icon: <Gamepad2 className="w-5 h-5" /> },
+      { label: "Media & Entertainment", href: "/industries/media-entertainment", icon: <Film className="w-5 h-5" /> },
     ],
   },
 ];
