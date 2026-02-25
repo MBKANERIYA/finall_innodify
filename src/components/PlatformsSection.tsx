@@ -11,8 +11,8 @@ const industries = [
     { name: "Logistics", icon: Truck, description: "Supply chain optimization", href: "/industries/logistics" },
     { name: "Education", icon: GraduationCap, description: "EdTech & LMS platforms", href: "/industries/education" },
     { name: "Real Estate", icon: Building2, description: "Property tech solutions", href: "/industries/real-estate" },
-    { name: "Sports & Gaming", icon: Gamepad2, description: "Interactive experiences", href: "/industries/logistics" },
-    { name: "Media & Entertainment", icon: Film, description: "Content platforms", href: "/industries/logistics" },
+    { name: "Sports & Gaming", icon: Gamepad2, description: "Interactive experiences", href: "/industries/sports-gaming" },
+    { name: "Media & Entertainment", icon: Film, description: "Content platforms", href: "/industries/media-entertainment" },
 ];
 
 export function PlatformsSection() {
