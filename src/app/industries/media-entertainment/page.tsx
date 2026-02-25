@@ -69,7 +69,7 @@ function HeroSection() {
     return (
         <section className="relative min-h-[80vh] flex items-center bg-white overflow-hidden pt-24">
             {/* Animated media element */}
-            <div className="absolute right-10 top-1/2 -translate-y-1/2 hidden md:block">
+            <div className="absolute right-[10%] lg:right-[15%] top-1/2 -translate-y-1/2 hidden md:block">
                 <motion.div
                     className="relative"
                     initial={{ x: 100, opacity: 0 }}
