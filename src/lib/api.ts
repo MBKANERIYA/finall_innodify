@@ -1,9 +1,12 @@
-// On the server, use the local express backend URL directly.
-// On the client, use an empty string so requests go to the Next.js proxy rewrite.
-const API_URL = typeof window === "undefined" 
-    ? (process.env.INTERNAL_API_URL || 'http://127.0.0.1:5000') 
-    : (process.env.NEXT_PUBLIC_API_URL || '');
+function getBaseUrl() {
+  if (typeof window !== 'undefined') return ''; // Browser uses relative URIs
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return `http://localhost:${process.env.PORT || 3000}`; // Dev environment
+}
 
+const API_URL = getBaseUrl();
 import { BlogPost } from '@/data/blogs';
 
 export async function fetchBlogs(): Promise<BlogPost[]> {
