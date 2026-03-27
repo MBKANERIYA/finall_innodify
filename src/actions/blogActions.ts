@@ -3,7 +3,9 @@
 import { BlogPost } from '@/data/blogs';
 import { revalidatePath } from 'next/cache';
 
-const API_URL = process.env.INTERNAL_API_URL || 'http://127.0.0.1:5000';
+import { getBaseUrl } from '@/lib/api';
+
+const API_URL = getBaseUrl();
 
 export async function addBlog(newBlog: BlogPost) {
     try {

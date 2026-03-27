@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "node node_modules/next/dist/bin/next build",
+    "build:hostinger": "npm run build && npm run postbuild && node scripts/copy-standalone.mjs",
     "postbuild": "node node_modules/next-sitemap/bin/next-sitemap.mjs",
     "start": "node node_modules/next/dist/bin/next start",
     "lint": "eslint"
