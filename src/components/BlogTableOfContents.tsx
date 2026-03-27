@@ -59,7 +59,7 @@ export default function BlogTableOfContents({ title, headings }: BlogTableOfCont
     if (headings.length === 0) return null;
 
     return (
-        <aside className="sticky top-24 mr-8 lg:w-72 hidden md:block self-start">
+        <aside className="sticky top-24 mr-8 lg:w-72 hidden md:block self-start max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-hide pr-2">
             <h5 className="text-sm font-semibold tracking-wider text-[#9ca3af] uppercase mb-4">
                 Table of Contents
             </h5>
