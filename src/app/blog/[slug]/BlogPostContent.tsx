@@ -16,7 +16,7 @@ export default function BlogPostContent({ post, recommendedPosts }: Props) {
     const headings = extractHeadings(post.content);
 
     return (
-        <section className="relative min-h-screen bg-[#0e1012] py-24 overflow-hidden selection:bg-[#00adef]/20">
+        <section className="relative min-h-screen bg-[#0e1012] py-24 overflow-clip selection:bg-[#00adef]/20">
             {/* Background effects */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0e1012] -z-10" />
             <div className="absolute inset-0 opacity-20 -z-10">
