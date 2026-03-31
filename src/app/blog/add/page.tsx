@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { BlogPost } from "@/data/blogs";
-import { fetchBlogs } from "@/lib/api";
+import { fetchBlogsClient } from "@/lib/api";
 import { addBlog, deleteBlog, updateBlog } from "@/actions/blogActions";
 import BlogContentRenderer from "@/components/BlogContentRenderer";
 
@@ -71,7 +71,7 @@ export default function AddBlogPage() {
     const [blogs, setBlogs] = useState<BlogPost[]>([]);
     
     useEffect(() => {
-        fetchBlogs().then(setBlogs);
+        fetchBlogsClient().then(setBlogs);
     }, []);
 
     const filteredBlogs = searchQuery.length >= 2

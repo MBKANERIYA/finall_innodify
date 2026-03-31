@@ -2,25 +2,44 @@
 
 import { BlogPost } from '@/data/blogs';
 import { revalidatePath } from 'next/cache';
-
-import { getBaseUrl } from '@/lib/api';
-
-const API_URL = getBaseUrl();
+import connectDB from '@/lib/db';
+import Blog from '@/models/Blog';
 
 export async function addBlog(newBlog: BlogPost) {
     try {
-        const response = await fetch(`${API_URL}/api/blogs`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newBlog),
-        });
+        await connectDB();
 
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+        // Auto-generate slug from title
+        const slug = newBlog.title
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/\s+/g, '-');
+
+        // Check if slug already exists
+        const existing = await Blog.findOne({ slug });
+        if (existing) {
+            return { success: false, error: 'A blog with this title/slug already exists' };
         }
+
+        await Blog.create({
+            title: newBlog.title,
+            slug,
+            excerpt: newBlog.excerpt,
+            content: newBlog.content,
+            author: newBlog.author || 'Innodify Admin',
+            date: newBlog.date || new Date().toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+            }),
+            readTime: newBlog.readTime || '5 min read',
+            category: newBlog.category,
+            image: newBlog.image || '',
+            metaTitle: newBlog.metaTitle || '',
+            metaDescription: newBlog.metaDescription || '',
+            keywords: newBlog.keywords || [],
+            canonicalUrl: newBlog.canonicalUrl || '',
+        });
 
         revalidatePath('/blog');
         return { success: true };
@@ -32,13 +51,11 @@ export async function addBlog(newBlog: BlogPost) {
 
 export async function deleteBlog(slug: string) {
     try {
-        const response = await fetch(`${API_URL}/api/blogs/${slug}`, {
-            method: 'DELETE',
-        });
+        await connectDB();
 
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+        const blog = await Blog.findOneAndDelete({ slug });
+        if (!blog) {
+            return { success: false, error: 'Blog not found' };
         }
 
         revalidatePath('/blog');
@@ -51,25 +68,34 @@ export async function deleteBlog(slug: string) {
 
 export async function updateBlog(oldSlug: string, updatedBlog: BlogPost) {
     try {
-        const response = await fetch(`${API_URL}/api/blogs/${oldSlug}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updatedBlog),
-        });
+        await connectDB();
 
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+        const existing = await Blog.findOne({ slug: oldSlug });
+        if (!existing) {
+            return { success: false, error: 'Blog not found' };
         }
+
+        // If title changed, regenerate slug
+        const updateData: any = { ...updatedBlog };
+        if (updatedBlog.title && updatedBlog.title !== existing.title) {
+            updateData.slug = updatedBlog.title
+                .toLowerCase()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/\s+/g, '-');
+        }
+
+        await Blog.findOneAndUpdate(
+            { slug: oldSlug },
+            updateData,
+            { new: true, runValidators: true }
+        );
 
         revalidatePath('/blog');
         revalidatePath(`/blog/${oldSlug}`);
-        if (updatedBlog.slug && updatedBlog.slug !== oldSlug) {
-            revalidatePath(`/blog/${updatedBlog.slug}`);
+        if (updateData.slug && updateData.slug !== oldSlug) {
+            revalidatePath(`/blog/${updateData.slug}`);
         }
-        
+
         return { success: true };
     } catch (error: any) {
         console.error('Failed to update blog:', error);
