@@ -4,6 +4,8 @@ import BlogPostContent from "./BlogPostContent";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { notFound } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 type Props = {
     params: Promise<{ slug: string }>;
 };

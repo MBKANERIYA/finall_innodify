@@ -3,6 +3,8 @@ import BlogContent from "./BlogContent";
 import { getBlogs } from "@/lib/server-api";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
     title: "Blog | Insights on Web, Mobile & AI Development",
     description:
