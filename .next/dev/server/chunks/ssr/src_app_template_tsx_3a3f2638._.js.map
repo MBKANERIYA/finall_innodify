@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///D:/finalinn/innodify-urgent/src/app/template.tsx"],"sourcesContent":["\"use client\";\r\n\r\nimport { motion } from \"framer-motion\";\r\nimport { ReactNode } from \"react\";\r\n\r\ninterface TemplateProps {\r\n    children: ReactNode;\r\n}\r\n\r\nexport default function Template({ children }: TemplateProps) {\r\n    return (\r\n        <motion.div\r\n            initial={{ opacity: 0, y: 10 }}\r\n            animate={{ opacity: 1, y: 0 }}\r\n            transition={{\r\n                duration: 0.3,\r\n                ease: [0.25, 0.1, 0.25, 1]\r\n            }}\r\n        >\r\n            {children}\r\n        </motion.div>\r\n    );\r\n}\r\n"],"names":[],"mappings":";;;;;AAEA;AAFA;;;AASe,SAAS,SAAS,EAAE,QAAQ,EAAiB;IACxD,qBACI,8OAAC,oMAAM,CAAC,GAAG;QACP,SAAS;YAAE,SAAS;YAAG,GAAG;QAAG;QAC7B,SAAS;YAAE,SAAS;YAAG,GAAG;QAAE;QAC5B,YAAY;YACR,UAAU;YACV,MAAM;gBAAC;gBAAM;gBAAK;gBAAM;aAAE;QAC9B;kBAEC;;;;;;AAGb"}}]
+}

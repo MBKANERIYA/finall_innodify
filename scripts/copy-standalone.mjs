@@ -25,4 +25,29 @@ if (fs.existsSync(publicDir)) {
     console.log('✅ Copied public to .next/standalone/public');
 }
 
+// Create Hostinger cPanel ready folder
+const hostingerPublicHtmlDir = path.join(rootDir, 'hostinger_deploy', 'public_html');
+if (!fs.existsSync(hostingerPublicHtmlDir)) fs.mkdirSync(hostingerPublicHtmlDir, { recursive: true });
+
+// Hostinger LiteSpeed serves static files from public_html. 
+// We must place _next/static inside it to prevent 404 missing styles.
+if (fs.existsSync(staticDir)) {
+    fs.cpSync(staticDir, path.join(hostingerPublicHtmlDir, '_next', 'static'), { recursive: true });
+}
+if (fs.existsSync(publicDir)) {
+    fs.cpSync(publicDir, hostingerPublicHtmlDir, { recursive: true });
+}
+
+// Write a .htaccess for public_html to route Node.js correctly
+const htaccessContent = `RewriteEngine On
+# Bypasses the Node.js app for static files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
+`;
+fs.writeFileSync(path.join(hostingerPublicHtmlDir, '.htaccess'), htaccessContent);
+
 console.log('🎉 Standalone build is ready for deployment!');
+console.log('👉 Upload the contents of .next/standalone to your main app folder on Hostinger.');
+console.log('👉 Upload the contents of hostinger_deploy/public_html to your public_html folder to fix missing CSS styles.');
+
