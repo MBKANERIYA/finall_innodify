@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-04-21 — Added E-Commerce App Coming Soon Page
+**What**: Created a customized "Coming Soon" page for the `/products/e-commerce-app` route.
+**Why**: The e-commerce app route was missing and returning a 404 error, creating a poor user experience. It's now replaced with a styled "Coming Soon" UI.
+**Files Changed**:
+- `src/app/products/e-commerce-app/page.tsx`
+- `src/app/products/e-commerce-app/Content.tsx`
+
+**Details**:
+- Implemented `ECommerceComingSoonContent` client component using Framer Motion for sleek animations.
+- Added a dark theme UI matching Innodify's premium styling.
+- Configured SEO metadata in `page.tsx` for optimal discovery.
+
 ## 2026-04-21 — Added URL Slug Field to Blog SEO Settings
 **What**: Added a custom URL Slug input field in the SEO & Metadata tab of the blog add/edit page.
 **Why**: Previously, blog slugs were always auto-generated from the title. Users needed the ability to set custom, SEO-friendly URL slugs (e.g., `blog1` → `https://innodify.in/blog/blog1`).
