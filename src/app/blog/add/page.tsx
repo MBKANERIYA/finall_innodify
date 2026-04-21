@@ -54,6 +54,25 @@ export default function AddBlogPage() {
         }),
     });
 
+    const generateSlugFromTitle = (title: string) => {
+        return title
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, "")
+            .replace(/\s+/g, "-")
+            .replace(/-+/g, "-")
+            .replace(/^-|-$/g, "");
+    };
+
+    const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const rawValue = e.target.value;
+        // Allow typing but sanitize: lowercase, replace spaces with hyphens, remove special chars
+        const sanitized = rawValue
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, "")
+            .replace(/\s+/g, "-");
+        setFormData((prev) => ({ ...prev, slug: sanitized }));
+    };
+
     const handleChange = (
         e: React.ChangeEvent<
             HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -178,10 +197,10 @@ export default function AddBlogPage() {
             return;
         }
 
-        const slug = (formData.title || "")
-            .toLowerCase()
-            .replace(/[^\w\s-]/g, "")
-            .replace(/\s+/g, "-");
+        // Use custom slug if provided, otherwise auto-generate from title
+        const slug = formData.slug?.trim()
+            ? formData.slug.trim()
+            : generateSlugFromTitle(formData.title || "");
 
         const newPost: BlogPost = {
             title: formData.title || "Untitled",
@@ -735,6 +754,43 @@ export default function AddBlogPage() {
                                                 <p className="text-[10px] text-[#4b5563] mt-1">Separate keywords with commas. Used for meta keywords tag.</p>
                                             </div>
 
+                                            {/* URL Slug */}
+                                            <div>
+                                                <label className="block text-sm font-medium text-[#b6bcc6] mb-2">
+                                                    URL Slug
+                                                </label>
+                                                <div className="flex gap-2">
+                                                    <input
+                                                        type="text"
+                                                        name="slug"
+                                                        value={formData.slug || ""}
+                                                        placeholder={formData.title ? generateSlugFromTitle(formData.title) : "e.g. my-blog-post"}
+                                                        onChange={handleSlugChange}
+                                                        className="flex-1 px-4 py-3 rounded-lg bg-[#0e1012] text-[#e5e7eb]
+                                                            placeholder:text-[#4b5563] border border-[#2a2f36]
+                                                            focus:border-[#00adef] focus:ring-2 focus:ring-[#00adef]/30
+                                                            outline-none transition-all font-mono text-sm"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setFormData(prev => ({ ...prev, slug: generateSlugFromTitle(prev.title || "") }))}
+                                                        className="px-4 py-3 rounded-lg bg-[#2a2f36] text-[#9ca3af] hover:text-[#00adef] hover:bg-[#2a2f36]/80 transition-all text-xs font-medium whitespace-nowrap"
+                                                        title="Auto-generate slug from title"
+                                                    >
+                                                        Auto Generate
+                                                    </button>
+                                                </div>
+                                                <div className="mt-2 px-3 py-2 rounded-md bg-[#0e1012]/50 border border-[#2a2f36]/50">
+                                                    <p className="text-[11px] text-[#6b7280] font-mono">
+                                                        <span className="text-[#4b5563]">https://innodify.in/blog/</span>
+                                                        <span className="text-[#00adef]">
+                                                            {formData.slug?.trim() || (formData.title ? generateSlugFromTitle(formData.title) : "your-slug-here")}
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                                <p className="text-[10px] text-[#4b5563] mt-1">Custom URL slug for this blog post. Leave empty to auto-generate from title. Only lowercase letters, numbers, and hyphens allowed.</p>
+                                            </div>
+
                                             {/* Canonical URL */}
                                             <div>
                                                 <label className="block text-sm font-medium text-[#b6bcc6] mb-2">
@@ -762,7 +818,7 @@ export default function AddBlogPage() {
                                                         {formData.metaTitle || formData.title || "Post Title"}
                                                     </p>
                                                     <p className="text-[#006621] text-sm">
-                                                        innodify.com › blog › {formData.title?.toLowerCase().replace(/\s+/g, "-").slice(0, 20) || "post-slug"}
+                                                        innodify.com › blog › {formData.slug?.trim() || (formData.title ? generateSlugFromTitle(formData.title).slice(0, 30) : "post-slug")}
                                                     </p>
                                                     <p className="text-[#545454] text-sm line-clamp-2 mt-1">
                                                         {formData.metaDescription || formData.excerpt || "Post description will appear here..."}

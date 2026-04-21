@@ -66,6 +66,15 @@ const navItems: NavItem[] = [
       { label: "Media & Entertainment", href: "/industries/media-entertainment", icon: <Film className="w-5 h-5" /> },
     ],
   },
+  {
+    label: "Products",
+    dropdown: [
+      { label: "CRM", href: "/products/crm", icon: <Database className="w-5 h-5" /> },
+      { label: "WhatsApp Broadcast", href: "/products/whatsapp-broadcast", icon: <Smartphone className="w-5 h-5" /> },
+      { label: "Real Estate", href: "/products/real-estate", icon: <Building2 className="w-5 h-5" /> },
+      { label: "E-Commerce App", href: "/products/e-commerce-app", icon: <ShoppingCart className="w-5 h-5" /> },
+    ],
+  },
 ];
 
 const rightNavItems: NavItem[] = [
