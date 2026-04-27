@@ -25,9 +25,9 @@ const libreBaskerville = Libre_Baskerville({
 export const metadata: Metadata = {
   metadataBase: new URL("https://innodify.in"),
   icons: {
-    icon: "/fav.png",
-    shortcut: "/fav.png",
-    apple: "/fav.png",
+    icon: "/fav2.png",
+    shortcut: "/fav2.png",
+    apple: "/fav2.png",
   },
   title: {
     default: "Innodify | AI, Web & Mobile Development Agency in Surat",
