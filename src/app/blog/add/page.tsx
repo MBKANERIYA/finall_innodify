@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowLeft, Save, Upload, Trash2, Search, Bold, List, Type, Heading2, Heading3, Heading4, Image as ImageIcon, Link as LinkIcon, Eye, Edit3, Search as SearchIcon, Settings, Lock, X } from "lucide-react";
+import { ArrowLeft, Save, Upload, Trash2, Search, Bold, List, Type, Heading2, Heading3, Heading4, Image as ImageIcon, Link as LinkIcon, Eye, Edit3, Search as SearchIcon, Settings, Lock, X, Table } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -655,6 +655,24 @@ export default function AddBlogPage() {
                                                         >
                                                             <LinkIcon size={16} />
                                                         </button>
+                                                        <div className="w-px h-4 bg-[#2a2f36] mx-1" />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                const cols = parseInt(prompt("Number of columns:") || "2", 10);
+                                                                const rows = parseInt(prompt("Number of data rows:") || "3", 10);
+                                                                if (isNaN(cols) || cols < 1 || isNaN(rows) || rows < 1) return;
+                                                                const header = "| " + Array.from({ length: cols }, (_, i) => `Header ${i + 1}`).join(" | ") + " |";
+                                                                const separator = "| " + Array.from({ length: cols }, () => "---").join(" | ") + " |";
+                                                                const dataRow = "| " + Array.from({ length: cols }, () => "  ").join(" | ") + " |";
+                                                                const tableMarkdown = "\n" + header + "\n" + separator + "\n" + Array(rows).fill(dataRow).join("\n") + "\n";
+                                                                insertFormatting(tableMarkdown);
+                                                            }}
+                                                            className="p-1.5 hover:bg-[#2a2f36] rounded text-[#9ca3af] hover:text-[#00adef] transition-all"
+                                                            title="Insert Table"
+                                                        >
+                                                            <Table size={16} />
+                                                        </button>
                                                     </div>
                                                 </div>
                                                 <textarea
@@ -671,7 +689,7 @@ export default function AddBlogPage() {
                                                 />
                                                 <p className="text-[10px] text-[#4b5563] mt-2 flex items-center gap-1">
                                                     <Type size={10} />
-                                                    Markdown: ## H2, ### H3, #### H4, **Bold**, - Bullet, ![Alt](URL) Image, [Text](URL) Link
+                                                    Markdown: ## H2, ### H3, #### H4, **Bold**, - Bullet, ![Alt](URL) Image, [Text](URL) Link, | Table |
                                                 </p>
                                             </div>
                                         </>
